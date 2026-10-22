@@ -1,0 +1,373 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sons of Thunder | Christmas Registration</title>
+
+    <meta name="description"
+          content="Register for the Sons of Thunder Christmas event. View event details and complete your free registration.">
+
+    <meta name="theme-color" content="#0b2d5c">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="{{ url_for('static', filename='main.js') }}"
+            defer></script>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container header-inner">
+
+            <a href="{{ url_for('index') }}"
+               class="brand"
+               aria-label="Sons of Thunder home">
+                <img class="brand-mark logo-image"
+                     src="{{ url_for('static', filename='images/sons-of-thunder-logo.jpg') }}"
+                     alt="Sons of Thunder logo">
+                <span class="brand-text">
+                    <strong>{{ team_name }}</strong>
+                    <small>Christmas Celebration</small>
+                </span>
+            </a>
+
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="#event-details">Event Details</a>
+                <a href="#about-event">About</a>
+                <a href="{{ url_for('admin_login') }}">Admin</a>
+            </nav>
+
+            <div class="social-links">
+                <a class="social-link youtube-link"
+                   href="https://youtube.com/@sonsofthunder-y7f?si=_-xPfYUirCeiFRSZ"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Visit Sons of Thunder on YouTube">
+                    <svg viewBox="0 0 24 24"
+                         width="24"
+                         height="24"
+                         fill="currentColor"
+                         aria-hidden="true">
+                        <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4L15.8 12l-6.2 3.6Z"/>
+                    </svg>
+                </a>
+
+                <a class="social-link instagram-link"
+                   href="https://www.instagram.com/sonsofthunder_y7f?cplk=cmQ1eGZsaHN0YXoz"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Visit Sons of Thunder on Instagram">
+                    <svg viewBox="0 0 24 24"
+                         width="24"
+                         height="24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="5"/>
+                        <circle cx="12" cy="12" r="4"/>
+                        <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"/>
+                    </svg>
+                </a>
+            </div>
+
+            <a href="{{ url_for('register') }}"
+               class="button button-small">
+                Register Now
+            </a>
+
+        </div>
+    </header>
+
+
+    <!-- EVENT ANNOUNCEMENT / POSTER -->
+    <main>
+
+        <section class="hero-section">
+            <div class="container">
+
+                <div class="announcement-label">
+                    <span class="announcement-dot"></span>
+                    CHRISTMAS CELEBRATION
+                </div>
+
+                <div class="hero-grid">
+
+                    <div class="hero-content">
+
+                        <p class="eyebrow">{{ team_name }} Presents</p>
+
+                        <h1>{{ event_name }}</h1>
+
+                        <p class="hero-description">
+                            Join us for a special Christmas gathering
+                            filled with worship, fellowship and celebration.
+                            Be part of this memorable event.
+                        </p>
+
+                        <div class="hero-event-meta">
+
+                            <div class="meta-item">
+                                <span class="meta-icon"
+                                      aria-hidden="true">01</span>
+                                <div>
+                                    <strong>Event Date</strong>
+                                    <span>
+                                        {{ event_date.strftime('%d %B %Y') }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="meta-item">
+                                <span class="meta-icon"
+                                      aria-hidden="true">02</span>
+                                <div>
+                                    <strong>Starting Time</strong>
+                                    <span>{{ event_time }}</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        {% if registration_open %}
+                            <a href="{{ url_for('register') }}"
+                               class="button hero-button">
+                                Register Now for Free
+                                <span aria-hidden="true">&rarr;</span>
+                            </a>
+                            <p class="button-note">
+                                Free registration. Complete your details
+                                to receive your registration ID.
+                            </p>
+                        {% else %}
+                            <button class="button hero-button" disabled>
+                                Registration Closed
+                            </button>
+                            <p class="button-note">
+                                Registration is currently closed.
+                            </p>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- EVENT POSTER -->
+                    <div class="poster-column">
+
+                        <div class="poster-frame">
+
+                            <div class="poster-topline">
+                                <span>{{ team_name }}</span>
+                                <span>OFFICIAL EVENT POSTER</span>
+                            </div>
+
+                            <img
+                                src="{{ url_for(
+                                    'static',
+                                    filename='images/event-poster.jpg'
+                                ) }}"
+                                alt="{{ event_name }} Christmas event poster"
+                                class="event-poster"
+                                fetchpriority="high">
+
+                            <div class="poster-footer">
+                                <span>{{ event_date.strftime('%d %B %Y') }}</span>
+                                <span>{{ event_time }}</span>
+                            </div>
+
+                        </div>
+
+                        <p class="poster-caption">
+                            Official event announcement
+                        </p>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- EVENT DETAILS -->
+        <section class="section event-details-section"
+                 id="event-details">
+
+            <div class="container">
+
+                <div class="section-heading">
+                    <span class="eyebrow">PLAN YOUR VISIT</span>
+                    <h2>Event Details</h2>
+                    <p>
+                        Everything you need to know before registering.
+                    </p>
+                </div>
+
+                <div class="details-grid">
+
+                    <article class="detail-card">
+                        <span class="detail-number">01</span>
+                        <h3>Organized By</h3>
+                        <p>{{ team_name }}</p>
+                    </article>
+
+                    <article class="detail-card">
+                        <span class="detail-number">02</span>
+                        <h3>Event Date</h3>
+                        <p>{{ event_date.strftime('%A, %d %B %Y') }}</p>
+                    </article>
+
+                    <article class="detail-card">
+                        <span class="detail-number">03</span>
+                        <h3>Event Time</h3>
+                        <p>{{ event_time }}</p>
+                    </article>
+
+                    <article class="detail-card">
+                        <span class="detail-number">04</span>
+                        <h3>Venue</h3>
+                        <p>{{ event_venue }}</p>
+                    </article>
+
+                    <article class="detail-card">
+                        <span class="detail-number">05</span>
+                        <h3>Registration Deadline</h3>
+                        <p>
+                            {{ registration_deadline.strftime(
+                                '%d %B %Y, %I:%M %p'
+                            ) }}
+                        </p>
+                    </article>
+
+                    <article class="detail-card">
+                        <span class="detail-number">06</span>
+                        <h3>Entry</h3>
+                        <p>Free registration</p>
+                    </article>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ABOUT EVENT -->
+        <section class="section about-section" id="about-event">
+            <div class="container">
+
+                <div class="about-panel">
+
+                    <div class="about-content">
+                        <span class="eyebrow">YOU ARE INVITED</span>
+
+                        <h2>Celebrate Christmas Together</h2>
+
+                        <p>
+                            {{ team_name }} welcomes you to
+                            {{ event_name }}. Register online to receive
+                            your unique registration ID and keep your
+                            confirmation ready for the event.
+                        </p>
+
+                        <ul class="benefit-list">
+                            <li>Simple online registration</li>
+                            <li>Unique registration ID</li>
+                            <li>Printable registration confirmation</li>
+                        </ul>
+
+                        {% if registration_open %}
+                            <a href="{{ url_for('register') }}"
+                               class="button">
+                                Register Now for Free
+                            </a>
+                        {% else %}
+                            <button class="button" disabled>
+                                Registration Closed
+                            </button>
+                        {% endif %}
+                    </div>
+
+                    <div class="about-side">
+                        <span class="about-side-label">
+                            REGISTRATION
+                        </span>
+                        <h3>Reserve Your Place</h3>
+                        <p>
+                            Complete the registration form with your
+                            correct contact details.
+                        </p>
+                        <div class="about-divider"></div>
+                        <p class="deadline-label">CLOSING DATE</p>
+                        <strong>
+                            {{ registration_deadline.strftime(
+                                '%d %B %Y'
+                            ) }}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- FINAL CALL TO ACTION -->
+        <section class="final-cta">
+            <div class="container final-cta-inner">
+
+                <div>
+                    <span class="eyebrow">JOIN THE CELEBRATION</span>
+                    <h2>We Look Forward to Seeing You</h2>
+                    <p>
+                        Complete your free registration before the deadline.
+                    </p>
+                </div>
+
+                {% if registration_open %}
+                    <a href="{{ url_for('register') }}"
+                       class="button button-white">
+                        Register Now for Free
+                    </a>
+                {% else %}
+                    <button class="button button-white" disabled>
+                        Registration Closed
+                    </button>
+                {% endif %}
+
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container footer-inner">
+
+            <div>
+                <strong>{{ team_name }}</strong>
+                <p>{{ event_name }}</p>
+            </div>
+
+            <div class="footer-links">
+                <a href="#event-details">Event Details</a>
+                <a href="{{ url_for('admin_login') }}">Admin Login</a>
+            </div>
+
+            <p class="copyright">
+                &copy; {{ event_date.year }} {{ team_name }}.
+                All rights reserved.
+            </p>
+
+        </div>
+    </footer>
+
+</body>
+</html>

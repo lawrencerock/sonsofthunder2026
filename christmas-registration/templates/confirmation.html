@@ -1,0 +1,256 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Registration Confirmed | {{ team_name }}</title>
+    <meta name="theme-color" content="#0b2d5c">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="{{ url_for('static', filename='main.js') }}"
+            defer></script>
+</head>
+
+<body class="confirmation-page">
+
+    <!-- HEADER -->
+    <header class="site-header no-print">
+        <div class="container header-inner">
+
+            <a href="{{ url_for('index') }}" class="brand">
+                <img class="brand-mark logo-image"
+                     src="{{ url_for('static', filename='images/sons-of-thunder-logo.jpg') }}"
+                     alt="Sons of Thunder logo">
+                <span class="brand-text">
+                    <strong>{{ team_name }}</strong>
+                    <small>Christmas Celebration</small>
+                </span>
+            </a>
+
+            <a href="{{ url_for('index') }}" class="back-link">
+                Back to Home
+            </a>
+
+        </div>
+    </header>
+
+
+    <main class="confirmation-main">
+        <div class="container confirmation-container">
+
+            <!-- SUCCESS MESSAGE -->
+            <section class="success-heading no-print">
+
+                <div class="success-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"
+                         width="38"
+                         height="38"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2.2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M5 12.5l4.5 4.5L19 7"/>
+                    </svg>
+                </div>
+
+                <span class="eyebrow">REGISTRATION COMPLETED</span>
+
+                <h1>Thank You for Registering!</h1>
+
+                <p>
+                    Your registration has been saved successfully.
+                    Keep your registration ID for event reference.
+                </p>
+
+            </section>
+
+
+            <!-- PRINTABLE CONFIRMATION CARD -->
+            <article class="confirmation-card" id="printableConfirmation">
+
+                <header class="confirmation-card-header">
+
+                    <div class="confirmation-brand">
+                        <img class="brand-mark logo-image"
+                             src="{{ url_for('static', filename='images/sons-of-thunder-logo.jpg') }}"
+                             alt="Sons of Thunder logo">
+
+                        <div>
+                            <strong>{{ team_name }}</strong>
+                            <small>OFFICIAL REGISTRATION CONFIRMATION</small>
+                        </div>
+                    </div>
+
+                    <span class="confirmation-status">
+                        REGISTERED
+                    </span>
+
+                </header>
+
+
+                <section class="confirmation-event">
+
+                    <p class="eyebrow">CHRISTMAS CELEBRATION</p>
+
+                    <h2>{{ event_name }}</h2>
+
+                    <p class="confirmation-organizer">
+                        Organized by {{ team_name }}
+                    </p>
+
+                    <div class="confirmation-event-details">
+
+                        <div>
+                            <span>EVENT DATE</span>
+                            <strong>
+                                {{ event_date.strftime('%d %B %Y') }}
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>EVENT TIME</span>
+                            <strong>{{ event_time }}</strong>
+                        </div>
+
+                        <div>
+                            <span>VENUE</span>
+                            <strong>{{ event_venue }}</strong>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- UNIQUE REGISTRATION ID -->
+                <section class="registration-id-panel">
+
+                    <span class="registration-id-label">
+                        YOUR REGISTRATION ID
+                    </span>
+
+                    <strong class="registration-id-value">
+                        {{ registration.registration_id }}
+                    </strong>
+
+                    <p>
+                        Please save this ID for your event reference.
+                    </p>
+
+                </section>
+
+
+                <!-- REGISTERED PERSON DETAILS -->
+                <section class="registered-person">
+
+                    <h3>Participant Details</h3>
+
+                    <div class="participant-details-grid">
+
+                        <div class="participant-detail">
+                            <span>Full Name</span>
+                            <strong>{{ registration.full_name }}</strong>
+                        </div>
+
+                        <div class="participant-detail">
+                            <span>Mobile Number</span>
+                            <strong>{{ registration.mobile }}</strong>
+                        </div>
+
+                        <div class="participant-detail">
+                            <span>Gender</span>
+                            <strong>{{ registration.gender }}</strong>
+                        </div>
+
+                        <div class="participant-detail">
+                            <span>Church Name</span>
+                            <strong>
+                                {{ registration.church_name or 'Not provided' }}
+                            </strong>
+                        </div>
+
+                        <div class="participant-detail full-width">
+                            <span>Address</span>
+                            <strong>{{ registration.address }}</strong>
+                        </div>
+
+                        <div class="participant-detail">
+                            <span>Registration Date</span>
+                            <strong>
+                                {{ registration.created_at.strftime(
+                                    '%d %B %Y, %I:%M %p'
+                                ) }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <footer class="confirmation-card-footer">
+
+                    <p>
+                        Organized by {{ team_name }}
+                    </p>
+
+                    <p>
+                        Keep this confirmation for your records.
+                    </p>
+
+                </footer>
+
+            </article>
+
+
+            <!-- ACTION BUTTONS -->
+            <section class="confirmation-actions no-print">
+
+                <button type="button"
+                        class="button"
+                        id="printConfirmation"
+                        onclick="window.print()">
+                    Print Registration
+                </button>
+
+                <a class="button button-outline"
+                   href="{{ url_for('index') }}">
+                    Back to Home
+                </a>
+
+            </section>
+
+
+            <p class="confirmation-note no-print">
+                You can print this page or choose Save as PDF
+                in your browser's print menu.
+            </p>
+
+        </div>
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="site-footer no-print">
+        <div class="container footer-inner">
+
+            <div>
+                <strong>{{ team_name }}</strong>
+                <p>{{ event_name }}</p>
+            </div>
+
+            <p class="copyright">
+                &copy; {{ event_date.year }} {{ team_name }}.
+                All rights reserved.
+            </p>
+
+        </div>
+    </footer>
+
+</body>
+</html>

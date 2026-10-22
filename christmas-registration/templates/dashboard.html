@@ -1,0 +1,367 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | {{ team_name }}</title>
+    <meta name="theme-color" content="#0b2d5c">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="{{ url_for('static', filename='main.js') }}"
+            defer></script>
+</head>
+
+<body class="dashboard-page">
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container header-inner">
+
+            <a href="{{ url_for('admin_dashboard') }}" class="brand">
+                <img class="brand-mark logo-image"
+                     src="{{ url_for('static', filename='images/sons-of-thunder-logo.jpg') }}"
+                     alt="Sons of Thunder logo">
+
+                <span class="brand-text">
+                    <strong>{{ team_name }}</strong>
+                    <small>Admin Dashboard</small>
+                </span>
+            </a>
+
+            <div class="dashboard-header-actions">
+
+                <a href="{{ url_for('index') }}"
+                   class="back-link">
+                    Public Website
+                </a>
+
+                <form action="{{ url_for('admin_logout') }}"
+                      method="POST"
+                      class="logout-form">
+
+                    <input type="hidden"
+                           name="csrf_token"
+                           value="{{ csrf_token() }}">
+
+                    <button type="submit"
+                            class="button button-outline button-small">
+                        Logout
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+    </header>
+
+
+    <main class="dashboard-main">
+
+        <div class="container dashboard-container">
+
+            <!-- PAGE TITLE -->
+            <section class="dashboard-welcome">
+
+                <div>
+                    <span class="eyebrow">EVENT MANAGEMENT</span>
+
+                    <h1>Registration Dashboard</h1>
+
+                    <p>
+                        Manage participants registered for
+                        {{ event_name }}.
+                    </p>
+                </div>
+
+                <div class="dashboard-event-status">
+                    <span class="status-indicator"></span>
+
+                    {% if registration_open %}
+                        Registration Open
+                    {% else %}
+                        Registration Closed
+                    {% endif %}
+                </div>
+
+            </section>
+
+
+            <!-- FLASH MESSAGES -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages" role="alert">
+                        {% for category, message in messages %}
+                            <div class="flash-message {{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+
+            <!-- STATISTICS -->
+            <section class="dashboard-stats">
+
+                <article class="stat-card">
+                    <div class="stat-card-top">
+                        <span>Total Registrations</span>
+                        <span class="stat-icon">01</span>
+                    </div>
+
+                    <strong class="stat-number">
+                        {{ total_registrations }}
+                    </strong>
+
+                    <p>All saved participant records</p>
+                </article>
+
+
+                <article class="stat-card">
+                    <div class="stat-card-top">
+                        <span>Event Date</span>
+                        <span class="stat-icon">02</span>
+                    </div>
+
+                    <strong class="stat-date">
+                        {{ event_date.strftime('%d %b %Y') }}
+                    </strong>
+
+                    <p>{{ event_time }}</p>
+                </article>
+
+
+                <article class="stat-card">
+                    <div class="stat-card-top">
+                        <span>Registration Deadline</span>
+                        <span class="stat-icon">03</span>
+                    </div>
+
+                    <strong class="stat-date">
+                        {{ registration_deadline.strftime('%d %b %Y') }}
+                    </strong>
+
+                    <p>
+                        {% if registration_open %}
+                            Accepting registrations
+                        {% else %}
+                            Registration closed
+                        {% endif %}
+                    </p>
+                </article>
+
+            </section>
+
+
+            <!-- REGISTRATION TABLE -->
+            <section class="dashboard-panel">
+
+                <div class="dashboard-panel-heading">
+
+                    <div>
+                        <h2>Participant Records</h2>
+
+                        <p>
+                            Search and review registered participants.
+                        </p>
+                    </div>
+
+                    <a href="{{ url_for('download_csv') }}"
+                       class="button csv-button">
+                        Download CSV
+                    </a>
+
+                </div>
+
+
+                <!-- SEARCH -->
+                <form action="{{ url_for('admin_dashboard') }}"
+                      method="GET"
+                      class="dashboard-search">
+
+                    <label for="search">
+                        Search registrations
+                    </label>
+
+                    <div class="search-controls">
+
+                        <input
+                            type="search"
+                            id="search"
+                            name="q"
+                            value="{{ search }}"
+                            placeholder="Name, mobile number, or registration ID"
+                            maxlength="100">
+
+                        <button type="submit" class="button">
+                            Search
+                        </button>
+
+                        {% if search %}
+                            <a href="{{ url_for('admin_dashboard') }}"
+                               class="button button-outline">
+                                Clear
+                            </a>
+                        {% endif %}
+
+                    </div>
+
+                </form>
+
+
+                <!-- RESULTS SUMMARY -->
+                <div class="table-summary">
+                    <span>
+                        {% if search %}
+                            Search results for "{{ search }}"
+                        {% else %}
+                            All registrations
+                        {% endif %}
+                    </span>
+
+                    <strong>
+                        {{ registrations|length }} record(s) displayed
+                    </strong>
+                </div>
+
+
+                <!-- RESPONSIVE TABLE -->
+                <div class="table-responsive">
+
+                    <table class="registration-table">
+
+                        <thead>
+                            <tr>
+                                <th>Registration ID</th>
+                                <th>Full Name</th>
+                                <th>Mobile Number</th>
+                                <th>Gender</th>
+                                <th>Church Name</th>
+                                <th>Address</th>
+                                <th>Registration Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for item in registrations %}
+
+                                <tr>
+                                    <td>
+                                        <span class="table-registration-id">
+                                            {{ item.registration_id }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <strong>{{ item.full_name }}</strong>
+                                    </td>
+
+                                    <td>{{ item.mobile }}</td>
+
+                                    <td>{{ item.gender }}</td>
+
+                                    <td>
+                                        {{ item.church_name or '—' }}
+                                    </td>
+
+                                    <td class="table-address">
+                                        {{ item.address }}
+                                    </td>
+
+                                    <td>
+                                        {{ item.created_at.strftime(
+                                            '%d %b %Y, %I:%M %p'
+                                        ) }}
+                                    </td>
+                                </tr>
+
+                            {% else %}
+
+                                <tr>
+                                    <td colspan="7"
+                                        class="empty-table-message">
+
+                                        {% if search %}
+                                            No registrations matched your search.
+                                        {% else %}
+                                            No registrations have been submitted yet.
+                                        {% endif %}
+
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- TABLE FOOTER -->
+                <div class="dashboard-table-footer">
+
+                    <p>
+                        Displaying {{ registrations|length }}
+                        record(s) on this page.
+                    </p>
+
+                    <a href="{{ url_for('download_csv') }}"
+                       class="download-text-link">
+                        Download complete registration data &rarr;
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <!-- ADMIN INFORMATION -->
+            <section class="dashboard-security-note">
+
+                <div>
+                    <strong>Administrator access</strong>
+
+                    <p>
+                        Registration data contains personal information.
+                        Keep downloaded CSV files secure and share them
+                        only with authorized event organizers.
+                    </p>
+                </div>
+
+                <span class="security-label">
+                    SECURE AREA
+                </span>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container footer-inner">
+
+            <div>
+                <strong>{{ team_name }}</strong>
+                <p>Event Registration Administration</p>
+            </div>
+
+            <p class="copyright">
+                &copy; {{ event_date.year }} {{ team_name }}.
+                All rights reserved.
+            </p>
+
+        </div>
+    </footer>
+
+</body>
+</html>

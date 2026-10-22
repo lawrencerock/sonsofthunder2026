@@ -1,0 +1,346 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Event Registration | {{ team_name }}</title>
+
+    <meta name="theme-color" content="#0b2d5c">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="{{ url_for('static', filename='main.js') }}"
+            defer></script>
+</head>
+
+<body class="registration-page">
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container header-inner">
+
+            <a href="{{ url_for('index') }}" class="brand">
+                <img class="brand-mark logo-image"
+                     src="{{ url_for('static', filename='images/sons-of-thunder-logo.jpg') }}"
+                     alt="Sons of Thunder logo">
+                <span class="brand-text">
+                    <strong>{{ team_name }}</strong>
+                    <small>Christmas Celebration</small>
+                </span>
+            </a>
+
+            <a href="{{ url_for('index') }}"
+               class="back-link">
+                &larr; Back to Home
+            </a>
+
+        </div>
+    </header>
+
+
+    <main class="registration-main">
+
+        <div class="container registration-container">
+
+            <!-- EVENT BANNER -->
+            <section class="registration-banner">
+
+                <div class="registration-banner-content">
+                    <span class="eyebrow">OFFICIAL EVENT REGISTRATION</span>
+
+                    <h1>{{ event_name }}</h1>
+
+                    <p>
+                        Organized by {{ team_name }}
+                    </p>
+
+                    <div class="registration-banner-meta">
+                        <span>
+                            {{ event_date.strftime('%d %B %Y') }}
+                        </span>
+
+                        <span>{{ event_time }}</span>
+                    </div>
+                </div>
+
+                <div class="registration-banner-side">
+                    <span class="banner-label">ENTRY</span>
+                    <strong>FREE</strong>
+                    <span>Online Registration</span>
+                </div>
+
+            </section>
+
+
+            <!-- FORM CARD -->
+            <section class="form-card">
+
+                <div class="form-heading">
+                    <span class="form-step">REGISTRATION FORM</span>
+
+                    <h2>Your Details</h2>
+
+                    <p>
+                        Please provide accurate information to complete
+                        your event registration.
+                    </p>
+
+                    <p class="required-note">
+                        Fields marked with * are required.
+                    </p>
+                </div>
+
+
+                <!-- SERVER FLASH MESSAGES -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages" role="alert">
+                            {% for category, message in messages %}
+                                <div class="flash-message {{ category }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+
+                {% if registration_open %}
+
+                    <form
+                        action="{{ url_for('register') }}"
+                        method="POST"
+                        class="registration-form"
+                        id="registrationForm">
+
+                        <!-- Required for Flask-WTF CSRF protection -->
+                        <input type="hidden" name="csrf_token"
+                               value="{{ csrf_token() }}">
+
+                        <!-- FULL NAME -->
+                        <div class="form-group">
+                            <label for="full_name">
+                                Full Name <span>*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="full_name"
+                                name="full_name"
+                                placeholder="Enter your full name"
+                                maxlength="120"
+                                autocomplete="name"
+                                required>
+                        </div>
+
+
+                        <!-- MOBILE NUMBER -->
+                        <div class="form-group">
+                            <label for="mobile">
+                                Mobile Number <span>*</span>
+                            </label>
+
+                            <div class="mobile-input-wrapper">
+                                <span class="country-code">+91</span>
+
+                                <input
+                                    type="tel"
+                                    id="mobile"
+                                    name="mobile"
+                                    placeholder="10-digit mobile number"
+                                    inputmode="numeric"
+                                    autocomplete="tel-national"
+                                    pattern="[6-9][0-9]{9}"
+                                    maxlength="10"
+                                    minlength="10"
+                                    title="Enter a valid 10-digit Indian mobile number."
+                                    required>
+                            </div>
+
+                            <small class="field-help">
+                                Enter your 10-digit Indian mobile number.
+                            </small>
+                        </div>
+
+
+                        <!-- GENDER -->
+                        <fieldset class="form-group gender-fieldset">
+                            <legend>
+                                Gender <span>*</span>
+                            </legend>
+
+                            <div class="gender-options">
+
+                                <label class="gender-option">
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        value="Male"
+                                        required>
+                                    <span>Male</span>
+                                </label>
+
+                                <label class="gender-option">
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        value="Female">
+                                    <span>Female</span>
+                                </label>
+
+                                <label class="gender-option">
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        value="Other">
+                                    <span>Other</span>
+                                </label>
+
+                            </div>
+                        </fieldset>
+
+
+                        <!-- CHURCH NAME -->
+                        <div class="form-group">
+                            <label for="church_name">
+                                Church Name
+                                <span class="optional-label">(Optional)</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="church_name"
+                                name="church_name"
+                                placeholder="Enter your church name"
+                                maxlength="150"
+                                autocomplete="organization">
+                        </div>
+
+
+                        <!-- ADDRESS -->
+                        <div class="form-group">
+                            <label for="address">
+                                Address <span>*</span>
+                            </label>
+
+                            <textarea
+                                id="address"
+                                name="address"
+                                placeholder="Enter your complete address"
+                                rows="4"
+                                maxlength="500"
+                                autocomplete="street-address"
+                                required></textarea>
+                        </div>
+
+
+                        <!-- PRIVACY INFORMATION -->
+                        <div class="privacy-notice">
+                            <strong>Personal information</strong>
+
+                            <p>
+                                Your details will be used by the event
+                                organizers for registration and event
+                                coordination. Access is restricted to
+                                authorized administrators.
+                            </p>
+                        </div>
+
+
+                        <!-- SUBMIT -->
+                        <button
+                            type="submit"
+                            class="button submit-button"
+                            id="submitButton">
+
+                            Submit Registration
+                            <span aria-hidden="true">&rarr;</span>
+
+                        </button>
+
+                        <p class="form-footer-note">
+                            Review your details before submitting.
+                        </p>
+
+                    </form>
+
+                {% else %}
+
+                    <div class="registration-closed">
+                        <h2>Registration Closed</h2>
+
+                        <p>
+                            The registration deadline has passed or
+                            registration is temporarily unavailable.
+                        </p>
+
+                        <a href="{{ url_for('index') }}"
+                           class="button">
+                            Return to Home
+                        </a>
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+
+            <!-- EVENT INFORMATION -->
+            <aside class="registration-help">
+
+                <h3>Event Information</h3>
+
+                <div class="help-row">
+                    <span>Organized by</span>
+                    <strong>{{ team_name }}</strong>
+                </div>
+
+                <div class="help-row">
+                    <span>Event date</span>
+                    <strong>
+                        {{ event_date.strftime('%d %B %Y') }}
+                    </strong>
+                </div>
+
+                <div class="help-row">
+                    <span>Venue</span>
+                    <strong>{{ event_venue }}</strong>
+                </div>
+
+                <div class="help-row">
+                    <span>Registration closes</span>
+                    <strong>
+                        {{ registration_deadline.strftime(
+                            '%d %B %Y, %I:%M %p'
+                        ) }}
+                    </strong>
+                </div>
+
+            </aside>
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container footer-inner">
+
+            <div>
+                <strong>{{ team_name }}</strong>
+                <p>{{ event_name }}</p>
+            </div>
+
+            <a href="{{ url_for('index') }}">
+                Return to Home
+            </a>
+
+        </div>
+    </footer>
+
+</body>
+</html>
